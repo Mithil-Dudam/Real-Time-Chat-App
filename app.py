@@ -119,7 +119,7 @@ async def texts(chat_id:int,db:db_dependency):
 
 class ConnectionManager:
     def __init__(self):
-        self.active_connections: dict[int, list[WebSocket]] = {}  # Mapping chat_id -> list of WebSockets
+        self.active_connections: dict[int, list[WebSocket]] = {}  
     
     async def connect(self, websocket: WebSocket, chat_id: int):
         await websocket.accept()
@@ -130,7 +130,7 @@ class ConnectionManager:
     def disconnect(self, websocket: WebSocket, chat_id: int):
         if chat_id in self.active_connections:
             self.active_connections[chat_id].remove(websocket)
-            if not self.active_connections[chat_id]:  # Remove empty chat_id list
+            if not self.active_connections[chat_id]:  
                 del self.active_connections[chat_id]
 
     async def send_to_chat(self, chat_id: int, message: str):
@@ -146,7 +146,7 @@ async def websocket_endpoint(websocket: WebSocket, chat_id: int):
     try:
         while True:
             data = await websocket.receive_text()
-            await manager.send_to_chat(chat_id, data)  # Send only to users in the same chat
+            await manager.send_to_chat(chat_id, data) 
     except WebSocketDisconnect:
         manager.disconnect(websocket, chat_id)
 
